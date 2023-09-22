@@ -1,8 +1,8 @@
-class Weapon
+class Shield
   # Constructor
   def initialize (protection,uses)
-    @protection = protection;
-    @uses = uses;
+    @protection = protection
+    @uses = uses
   end
   def protect
     if @uses > 0
@@ -14,5 +14,8 @@ class Weapon
   end
   def to_s
     "S[#{@protection}, #{@uses}"
+  end
+  def discard
+    Dice.discard_element(@uses)
   end
 end

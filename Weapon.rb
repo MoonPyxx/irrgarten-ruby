@@ -1,8 +1,8 @@
 class Weapon
   # Constructor
   def initialize (power,uses)
-    @power = power;
-    @uses = uses;
+    @power = power
+    @uses = uses
   end
   def attack
     if @uses > 0
@@ -15,5 +15,7 @@ class Weapon
   def to_s
     "W[#{@power}, #{@uses}"
   end
+  def discard
+    Dice.discard_element(@uses)
+  end
 end
-¡
