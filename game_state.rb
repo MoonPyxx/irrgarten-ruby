@@ -2,8 +2,8 @@
 
 class GameState
   # Constructor
-  def initialize(labyrinthv, players, monsters, current_player, winner, log)
-    @labyrinthv = labyrinthv
+  def initialize(labyrinth, players, monsters, current_player, winner, log)
+    @labyrinth = labyrinth
     @players = players
     @monsters = monsters
     @current_player = current_player
@@ -11,5 +11,5 @@ class GameState
     @log = log
   end
   # Consultores
-  attr_reader :labyrinthv, :players, :monsters, :current_player, :winner, :log
+  attr_reader :labyrinth, :players, :monsters, :current_player, :winner, :log
 end
