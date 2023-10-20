@@ -8,7 +8,6 @@ class Labyrinth
   @@EXIT_CHAR =  'E'
   @@ROW =  0
   @@COL = 1
-  attr_accessor :nRows, :nCols, :exitRow, :exitCol
 
   def initialize
     @nRows = nRows;
