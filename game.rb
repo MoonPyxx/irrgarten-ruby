@@ -2,9 +2,8 @@
 
 class Game
   @@MAX_ROUNDS = 10
-
-  attr_accessor :current_player_index, :log
   def initialize(n_players)
+    @current_player_index = current_player_index
     @players = []
     @monsters = []
     @log = ""
