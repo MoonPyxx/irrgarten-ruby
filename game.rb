@@ -46,7 +46,6 @@ class Game
       m = Monster.new(monster_name, intelligence, strength)
       @labyrinth.add_monster(row, col, m)
       @monsters << m
-
     end
   end
   def next_player
