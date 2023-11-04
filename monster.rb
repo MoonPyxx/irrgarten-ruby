@@ -18,7 +18,15 @@ class Monster
     Dice.intensity(@strength)
   end
   def defend(received_attack)
-
+    if dead
+      false
+    end
+    defensive_energy = Dice.intensity(@intelligence)
+    if defensive_energy < received_attack
+      got_wounded
+      dead
+    end
+    false
   end
   def set_pos(row,col)
   @row = row
