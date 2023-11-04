@@ -19,7 +19,10 @@ class Player
   end
 
   def resurrect
-
+    @weapons.clear
+    @shields.clear
+    @health = @@INITIAL_HEALTH
+    @consecutive_hits = 0
   end
   def set_pos(row,col)
     @row = row
@@ -29,7 +32,13 @@ class Player
     @health <=0
   end
   def move (direction, valid_moves)
-
+    size = valid_moves.size
+    contained = false
+    if size > 0 && !valid_moves.include?(direction)
+      valid_moves[0]
+    else
+      direction
+    end
   end
   def attack
     @strength + sum_weapons
@@ -38,17 +47,47 @@ class Player
     manage_hit(received_attack)
   end
   def receive_reward
+    w_reward = Dice.weapons_reward
+    s_reward = Dice.shields_reward
 
+    w_reward.times do
+      w_new = new_weapon
+      receive_weapon(w_new)
+    end
+    s_reward.times do
+      s_new = new_shield
+      receive_shield(s_new)
+    end
+    extra_health = Dice.health_reward
+    @health += extra_health
   end
   def to_string
     "Player [Name: #{@name}, Number: #{@number}, Intelligence: #{@intelligence}, Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col}]"
   end
   private
   def receive_weapon(w)
-
+    @weapons.each_with_index do |wi,i|
+      discard = wi.discard
+      if (discard)
+        @weapons.delete_at(i)
+      end
+    end
+    size = @weapons.size
+    if (size<@@MAX_WEAPONS)
+      @weapons << w
+    end
   end
   def receive_shield(s)
-
+    @shields.each_with_index do |si,i|
+      discard = si.discard
+      if (discard)
+        @shields.delete_at(i)
+      end
+    end
+    size = @shields.size
+    if (size<@@MAX_SHIELDS)
+      @shields << s
+    end
   end
   def new_weapon
     power = Dice.weapon_power
@@ -78,7 +117,21 @@ class Player
     @intelligence + sum_shields
   end
   def manage_hit(received_attack)
+    defense = defensive_energy
+    lose = false
 
+    if defense < received_attack
+      got_wounded
+      inc_consecutive_hits
+    else
+      reset_hits
+    end
+    if @consecutive_hits == @@HITS2LOSE || dead
+      reset_hits
+      lose = true
+    end
+
+    lose
   end
   def reset_hits
   @consecutive_hits = 0
