@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+module Irrgarten
 class Monster
   @@INITIAL_HEALTH = 5
 
@@ -39,5 +39,5 @@ class Monster
   def got_wounded
     @health -= 1
   end
-
+  end
 end

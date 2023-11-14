@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 require_relative 'GameCharacter'
+require_relative 'Dice'
+require_relative 'Player'
+require_relative 'Labyrinth'
+require_relative 'Monster'
+require_relative 'Game_state'
+module Irrgarten
 class Game
   @@MAX_ROUNDS = 10
-  def initialize(n_players, current_player_index)
-    @current_player_index = current_player_index
+  def initialize(n_players)
+    @current_player_index = Dice.who_starts(n_players)
     @players = []
     @monsters = []
     @log = ""
@@ -11,18 +17,18 @@ class Game
     n_players.times do |i|
       intelligence = Dice.random_intelligence
       strength = Dice.random_strength
-      @players << Player.new((i+ '0').chr, intelligence, strength)
+      @players << Player.new((i.to_s + '0').chr, intelligence, strength)
     end
 
     @current_player_index = Dice.who_starts(n_players)
     exit_row = Dice.random_pos(10)
     exit_col = Dice.random_pos(10)
-    @labyrinth = Labryinth.new(10,10,exit_row, exit_col)
+    @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row, exit_col)
     configure_labyrinth
   end
 
   def finished
-    labyrinth.have_a_winner
+    @labyrinth.have_a_winner
   end
   def next_step(preferred_direction)
     current_player = @players[@current_player_index]
@@ -53,7 +59,7 @@ class Game
     players_string = @players.map(&:to_s).join("\n")
     monsters_string = @monsters.map(&:to_s).join("\n")
     is_winner = finished
-    GameState.new(labyrinth_string, players_string, monsters_string, @current_player_index, is_winner, @log)
+    Irrgarten::GameState.new(labyrinth_string, players_string, monsters_string, @current_player_index, is_winner, @log)
 
   end
   private
@@ -153,4 +159,5 @@ class Game
   def log_rounds(rounds, max)
     @log += "#{rounds} out of #{max} combat rounds have occurred.\n"
   end
+end
 end

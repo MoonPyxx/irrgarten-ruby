@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+module Irrgarten
 class Player
   attr_reader :row, :col, :number
   @@MAX_WEAPONS = 2;
@@ -143,4 +143,5 @@ class Player
   @consecutive_hits += 1
   end
 
+end
 end

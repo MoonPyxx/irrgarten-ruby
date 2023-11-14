@@ -1,3 +1,4 @@
+module Irrgarten
 class Weapon
   # Constructor
   def initialize (power,uses)
@@ -18,4 +19,5 @@ class Weapon
   def discard
     Dice.discard_element(@uses)
   end
+end
 end

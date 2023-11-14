@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+module Irrgarten
 class Labyrinth
   @@BLOCK_CHAR =  'X'
   @@EMPTY_CHAR =  '-'
@@ -9,15 +9,15 @@ class Labyrinth
   @@ROW =  0
   @@COL = 1
 
-  def initialize
-    @nRows = nRows;
-    @nCols = nCols;
-    @exitRow = exitRow;
-    @exitCol = exitCol;
-    @labyrinth = Array.new(@nRows) {Array.new(@nCols, @@EMPTY_CHAR)}
-    @monsters = Array.new(@nRows) {Array.new(@nCols)}
-    @players = Array.new (@nRows) {Array.new (@nCols)}
-    @labyrinth [@exitRow][@exitCol] = @@EXIT_CHAR
+  def initialize(n_rows, n_cols, exit_row, exit_col)
+    @n_rows = n_rows;
+    @n_cols = n_cols;
+    @exit_row = exit_row;
+    @exit_col = exit_col;
+    @labyrinth = Array.new(@n_rows) {Array.new(@n_cols, @@EMPTY_CHAR)}
+    @monsters = Array.new(@n_rows) {Array.new(@n_cols)}
+    @players = Array.new (@n_rows) {Array.new (@n_cols)}
+    @labyrinth [@exit_row][@exit_col] = @@EXIT_CHAR
   end
   def spread_players(players)
     @players.each do |player|
@@ -26,7 +26,7 @@ class Labyrinth
     end
   end
   def have_a_winner
-    !@players[@exitRow][@exitCol].nil?
+    !@players[@exit_row][@exit_col].nil?
   end
   def to_s
     result = ""
@@ -61,7 +61,7 @@ class Labyrinth
   def add_block(orientation, start_row, start_col, length)
     inc_row = 0
     inc_col = 0
-    if orientation == Orientation::VERTICAL
+    if orientation == Orientation::
       inc_row = 1
     else
       inc_col = 1
@@ -86,7 +86,8 @@ class Labyrinth
   end
   private
   def pos_ok(row, col)
-    row.between?(0, @nRows -1) && col.between?(0, @nCols - 1)
+    if row >= 0 && row < @n_rows && col >= 0 && col < @n_cols
+    end
   end
   def empty_pos(row,col)
     @labyrinth[row][col] == @@EMPTY_CHAR && @players[row][col].nil? && @monsters[row][col].nil?
@@ -101,7 +102,7 @@ class Labyrinth
     !@monsters[row][col].nil? && !@players[row][col].nil?
   end
   def can_step_on(row,col)
-    pos_ok?(row,col) && [@labyrinth[row][col], monster_pos(row,col), exit_pos(row,col)].include?(@@EMPTY_CHAR)
+    pos_ok(row,col) && [@labyrinth[row][col], monster_pos(row,col), exit_pos(row,col)].include?(@@EMPTY_CHAR)
   end
   def update_old_pos(row,col)
     if pos_ok?(row,col)
@@ -152,5 +153,5 @@ class Labyrinth
     end
     output
   end
-
+end
 end

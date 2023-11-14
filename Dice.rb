@@ -1,3 +1,4 @@
+module Irrgarten
 class Dice
 
   # Atributos de clase
@@ -61,4 +62,5 @@ class Dice
     end
     @@generator.rand()
   end
+end
 end

@@ -1,3 +1,4 @@
+module Irrgarten
 class Shield
   # Constructor
   def initialize (protection,uses)
@@ -18,4 +19,5 @@ class Shield
   def discard
     Dice.discard_element(@uses)
   end
+end
 end

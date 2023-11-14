@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+module Irrgarten
 class GameState
   # Constructor
   def initialize(labyrinth, players, monsters, current_player, winner, log)
@@ -12,4 +12,5 @@ class GameState
   end
   # Consultores
   attr_reader :labyrinth, :players, :monsters, :current_player, :winner, :log
+end
 end
