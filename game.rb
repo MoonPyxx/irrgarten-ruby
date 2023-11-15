@@ -55,9 +55,15 @@ class Game
     end_game
   end
   def get_game_state
+    players_string = ""
+    monsters_string = ""
+    @players.each do |p|
+      players_string += p.to_string + "\n"
+    end
+    @monsters.each do |m|
+      monsters_string += m.to_string + "\n"
+    end
     labyrinth_string= @labyrinth.to_s
-    players_string = @players.map(&:to_s).join("\n")
-    monsters_string = @monsters.map(&:to_s).join("\n")
     is_winner = finished
     Irrgarten::GameState.new(labyrinth_string, players_string, monsters_string, @current_player_index, is_winner, @log)
 
