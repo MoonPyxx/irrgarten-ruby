@@ -92,18 +92,28 @@ class Labyrinth
   end
   def valid_moves(row, col)
     output = []
-    output << Directions::DOWN if can_step_on(row + 1, col)
-    output << Directions::UP if can_step_on(row - 1, col)
-    output << Directions::RIGHT if can_step_on(row, col + 1)
-    output << Directions::LEFT if can_step_on(row, col - 1)
+    if can_step_on(row + 1,col)
+      output << Directions::DOWN
+    end
+    if can_step_on(row - 1, col)
+      output << Directions::UP
+    end
+    if can_step_on(row, col + 1)
+      output << Directions::RIGHT
+    end
+    if can_step_on(row, col - 1)
+      output << Directions::LEFT
+    end
     output
   end
   private
   def pos_ok(row, col)
      row >= 0 && row < @n_rows && col >= 0 && col < @n_cols
-
   end
   def empty_pos(row,col)
+    if !pos_ok(row,col)
+      false
+    end
     @labyrinth[row][col] == @@EMPTY_CHAR && @players[row][col].nil? && @monsters[row][col].nil?
   end
   def monster_pos(row, col)
@@ -116,33 +126,39 @@ class Labyrinth
     !@monsters[row][col].nil? && !@players[row][col].nil?
   end
   def can_step_on(row,col)
-    pos_ok(row,col) && [@labyrinth[row][col], monster_pos(row,col), exit_pos(row,col)].include?(@@EMPTY_CHAR)
+    pos_ok(row,col) && [@labyrinth[row][col] == @@EMPTY_CHAR || monster_pos(row,col) || exit_pos(row,col)]
   end
   def update_old_pos(row,col)
     if pos_ok(row,col)
-      @labyrinth[row][col] = @labyrinth[row][col] == @@COMBAT_CHAR ? @@MONSTER_CHAR : @@EMPTY_CHAR
+      if @labyrinth[row][col] == @@COMBAT_CHAR
+        @labyrinth[row][col] = @@MONSTER_CHAR
+      else
+        @labyrinth[row][col] = @@EMPTY_CHAR
+      end
     end
   end
   def dir_2_pos(row, col, direction)
     case direction
-    when :UP
-      row -= 1
-    when :DOWN
-      row += 1
-    when :LEFT
-      col -= 1
-    when :RIGHT
-      col += 1
+    when Directions::UP
+      row = row-1
+    when Directions::DOWN
+      row = row + 1
+    when Directions::LEFT
+      col = col -1
+    when Directions::RIGHT
+      col = col+1
     end
     [row, col]
   end
 
   def random_empty_pos
+    random_row, random_col = 0,0
     loop do
       random_row = Dice.random_pos(@n_rows)
       random_col = Dice.random_pos(@n_cols)
-      return [random_row, random_col] if @labyrinth[random_row][random_col] == @@EMPTY_CHAR
+      break if @labyrinth[random_row][random_col] == @@EMPTY_CHAR
     end
+    [random_row, random_col]
   end
   def put_player_2d(old_row, old_col, row, col, player)
     output = nil
@@ -159,7 +175,7 @@ class Labyrinth
         @labyrinth[row][col] = @@COMBAT_CHAR
         output = @monsters[row][col]
       else
-        number = player.number.to_s
+        number = player.number
         @labyrinth[row][col] = number
       end
       @players[row][col] = player

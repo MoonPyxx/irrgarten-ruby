@@ -34,12 +34,18 @@ class Player
   def move (direction, valid_moves)
     size = valid_moves.size
     contained = false
-    if size > 0 && !valid_moves.include?(direction)
+    valid_moves.each do |d|
+      if d == direction
+        contained = true
+        break
+      end
+    end
+    if size > 0 && !contained
       valid_moves[0]
     else
       direction
     end
-  end
+    end
   def attack
     @strength + sum_weapons
   end

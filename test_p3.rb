@@ -7,8 +7,8 @@ module Irrgarten
     def self.main
       game = Game.new(2,false)
       view = UI::TextUI.new
-      c = Control::Controller.new(game,view)
-      view.show_game(game.get_game_state)
+      c = Control::Controller.new(game,view)do
+      end
       c.play
     end
   end

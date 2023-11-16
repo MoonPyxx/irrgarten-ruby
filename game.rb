@@ -45,11 +45,11 @@ class Game
     dead = current_player.dead
     if !dead
       direction = actual_direction(preferred_direction)
-      if (direction != preferred_direction)
+      if direction != preferred_direction
         log_player_no_orders
       end
       monster = @labyrinth.put_player(direction, current_player)
-      if (monster.nil?)
+      if monster.nil?
         log_no_monster
       else
         winner = combat(monster)
@@ -136,11 +136,6 @@ end
     current_col = current_player.col
     valid_moves = @labyrinth.valid_moves(current_row,current_col)
     current_player.move(preferred_direction, valid_moves)
-    valid_moves.each do |valid_move|
-      return preferred_direction if valid_move == preferred_direction
-    end
-
-    nil
   end
   def combat(monster)
     current_player = @players[@current_player_index]
