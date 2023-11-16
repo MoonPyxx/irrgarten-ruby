@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative 'Orientation'
 module Irrgarten
 class Labyrinth
   @@BLOCK_CHAR =  'X'
@@ -20,9 +21,19 @@ class Labyrinth
     @labyrinth [@exit_row][@exit_col] = @@EXIT_CHAR
   end
   def spread_players(players)
-    @players.each do |player|
+    players.each do |player|
       pos = random_empty_pos
       put_player_2d(-1, -1, pos[0], pos[1], player)
+    end
+  end
+  def spread_players_debug(players)
+    i = 0
+    players.each do |player|
+      row = i+1
+      col = i+2
+      pos = [row,col]
+      put_player_2d(-1, -1, pos[0], pos[1], player)
+      i = i+1
     end
   end
   def have_a_winner
@@ -30,15 +41,15 @@ class Labyrinth
   end
   def to_s
     result = ""
-    @labyrinth.each_with_index do |row, i|
-      row.each_with_index do |cell, j|
-        result += if combat_pos(i, j)
-                    @@COMBAT_CHAR
-                  elsif monster_pos(i, j)
-                    @@MONSTER_CHAR
-                  else
-                    cell
-                  end
+    @n_rows.times do |i|
+      @n_cols.times do |j|
+        if combat_pos(i, j)
+          result += @@COMBAT_CHAR
+        elsif monster_pos(i, j)
+          result += @@MONSTER_CHAR
+        else
+          result += @labyrinth[i][j]
+        end
         result += ' '
       end
       result += "\n"
@@ -48,20 +59,23 @@ class Labyrinth
   def add_monster(row,col,monster)
     if can_step_on(row, col)
       @monsters[row][col] = monster
-      @labyrinth[row][col] = @players[row][col] ? @@COMBAT_CHAR : @@MONSTER_CHAR
+      if @players[row][col].nil?
+        @labyrinth[row][col] = @@MONSTER_CHAR
+      else
+        @labyrinth[row][col] = @@COMBAT_CHAR
+      end
     end
   end
   def put_player(direction, player)
     old_row = player.row
     old_col = player.col
     new_pos = dir_2_pos(old_row, old_col, direction)
-    monster = put_player_2d(old_row, old_col,new_pos[0],new_pos[1],player)
-    monster
+    monster = put_player_2d(old_row, old_col, new_pos[0], new_pos[1], player)
   end
   def add_block(orientation, start_row, start_col, length)
     inc_row = 0
     inc_col = 0
-    if orientation == Orientation::
+    if orientation == Orientation::VERTICAL
       inc_row = 1
     else
       inc_col = 1
@@ -73,7 +87,7 @@ class Labyrinth
       @labyrinth[row][col] = @@BLOCK_CHAR
       row += inc_row
       col += inc_col
-      length -= 1
+      length = length - 1
     end
   end
   def valid_moves(row, col)
@@ -86,8 +100,8 @@ class Labyrinth
   end
   private
   def pos_ok(row, col)
-    if row >= 0 && row < @n_rows && col >= 0 && col < @n_cols
-    end
+     row >= 0 && row < @n_rows && col >= 0 && col < @n_cols
+
   end
   def empty_pos(row,col)
     @labyrinth[row][col] == @@EMPTY_CHAR && @players[row][col].nil? && @monsters[row][col].nil?
@@ -105,7 +119,7 @@ class Labyrinth
     pos_ok(row,col) && [@labyrinth[row][col], monster_pos(row,col), exit_pos(row,col)].include?(@@EMPTY_CHAR)
   end
   def update_old_pos(row,col)
-    if pos_ok?(row,col)
+    if pos_ok(row,col)
       @labyrinth[row][col] = @labyrinth[row][col] == @@COMBAT_CHAR ? @@MONSTER_CHAR : @@EMPTY_CHAR
     end
   end
@@ -125,8 +139,8 @@ class Labyrinth
 
   def random_empty_pos
     loop do
-      random_row = Dice.random_pos(@nRows)
-      random_col = Dice.random_pos(@nCols)
+      random_row = Dice.random_pos(@n_rows)
+      random_col = Dice.random_pos(@n_cols)
       return [random_row, random_col] if @labyrinth[random_row][random_col] == @@EMPTY_CHAR
     end
   end
@@ -145,7 +159,7 @@ class Labyrinth
         @labyrinth[row][col] = @@COMBAT_CHAR
         output = @monsters[row][col]
       else
-        number = player.number
+        number = player.number.to_s
         @labyrinth[row][col] = number
       end
       @players[row][col] = player

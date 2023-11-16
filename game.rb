@@ -5,28 +5,38 @@ require_relative 'Player'
 require_relative 'Labyrinth'
 require_relative 'Monster'
 require_relative 'Game_state'
+require_relative 'Orientation'
 module Irrgarten
 class Game
   @@MAX_ROUNDS = 10
-  def initialize(n_players)
-    @current_player_index = Dice.who_starts(n_players)
+  def initialize(n_players,debug)
     @players = []
     @monsters = []
     @log = ""
-
-    n_players.times do |i|
-      intelligence = Dice.random_intelligence
-      strength = Dice.random_strength
-      @players << Player.new((i.to_s + '0').chr, intelligence, strength)
+    if (debug)
+      @current_player_index =  0
+      n_players.times do [i]
+      intelligence = i+1
+      strength = i+1
+      @players << Player.new((i.to_s + '0').chr, intelligence,strength)
+      end
+      exit_row = 5
+      exit_col = 5
+      @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row,exit_col)
+      configure_labyrinth_debug
+    else
+      @current_player_index = Dice.who_starts(n_players)
+      n_players.times do |i|
+        intelligence = Dice.random_intelligence
+        strength = Dice.random_strength
+        @players << Player.new((i.to_s + '0').chr, intelligence, strength)
+      end
+      exit_row = Dice.random_pos(10)
+      exit_col = Dice.random_pos(10)
+      @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row, exit_col)
+      configure_labyrinth
     end
-
-    @current_player_index = Dice.who_starts(n_players)
-    exit_row = Dice.random_pos(10)
-    exit_col = Dice.random_pos(10)
-    @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row, exit_col)
-    configure_labyrinth
-  end
-
+    end
   def finished
     @labyrinth.have_a_winner
   end
@@ -70,17 +80,52 @@ class Game
   end
   private
   def configure_labyrinth
-    5.times do
+    num_blocks = 5
+    num_monsters = 5
+    num_blocks.times do
+      row = Dice.random_pos(10)
+      col = Dice.random_pos(10)
+      length = 2
+      @labyrinth.add_block(Orientation::VERTICAL,row,col,length)
+      end
+    num_monsters.times do
       row = Dice.random_pos(10)
       col = Dice.random_pos(10)
       monster_name = "Monster #(i + 1)"
       intelligence = Dice.random_intelligence
       strength = Dice.random_strength
       m = Monster.new(monster_name, intelligence, strength)
+      m.set_pos(row,col)
       @labyrinth.add_monster(row, col, m)
       @monsters << m
     end
+    @labyrinth.spread_players(@players)
   end
+def configure_labyrinth_debug
+  num_blocks = 5
+  num_monsters = 5
+  i = 0
+  num_blocks.times do
+    row = i+1
+    col = i+1
+    length = 2
+    @labyrinth.add_block(Orientation::VERTICAL,row,col,length)
+    i = i+1
+  end
+  j = 0
+  num_monsters.times do
+    row = j
+    col = j
+    monster_name = "Monster #(i + 1)"
+    intelligence = j+1
+    strength = j+2
+    m = Monster.new(monster_name, intelligence, strength)
+    m.set_pos(row,col)
+    @labyrinth.add_monster(row, col, m)
+    @monsters << m
+    j = j+1
+  end
+end
   def next_player
     @current_player_index += 1
     @current_player_index = 0 if @current_player_index >= @players.size

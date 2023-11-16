@@ -5,8 +5,7 @@ require_relative 'Game'
 module Irrgarten
   class TestP3
     def self.main
-      puts "meow"
-      game = Game.new(2)
+      game = Game.new(2,false)
       view = UI::TextUI.new
       c = Control::Controller.new(game,view)
       view.show_game(game.get_game_state)
