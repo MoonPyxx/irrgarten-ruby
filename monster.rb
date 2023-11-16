@@ -33,11 +33,11 @@ class Monster
   @col = col
   end
   def to_string
-    "Monster [Name: #{@name}, Intelligence: #{@intelligence}, Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col}]"
+    "Monster [Number: #{@name}, Intelligence: #{@intelligence}, Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col}]"
   end
   private
   def got_wounded
-    @health -= 1
+    @health = @health -1
   end
   end
 end

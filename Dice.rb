@@ -60,7 +60,6 @@ class Dice
       probability = 1.0 - (uses_left.to_f / @@MAX_USES)
       return @@generator.rand < probability
     end
-    @@generator.rand()
   end
 end
 end

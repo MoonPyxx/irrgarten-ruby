@@ -27,8 +27,8 @@ class Game
     else
       @current_player_index = Dice.who_starts(n_players)
       n_players.times do |i|
-        intelligence = Dice.random_intelligence
-        strength = Dice.random_strength
+        intelligence = 1
+        strength = 1
         @players << Player.new((i.to_s + '0').chr, intelligence, strength)
       end
       exit_row = Dice.random_pos(10)
@@ -81,7 +81,8 @@ class Game
   private
   def configure_labyrinth
     num_blocks = 5
-    num_monsters = 5
+    num_monsters = 10
+    i = 0
     num_blocks.times do
       row = Dice.random_pos(10)
       col = Dice.random_pos(10)
@@ -91,13 +92,14 @@ class Game
     num_monsters.times do
       row = Dice.random_pos(10)
       col = Dice.random_pos(10)
-      monster_name = "Monster #(i + 1)"
+      monster_name = "Monster #{i+1}"
       intelligence = Dice.random_intelligence
       strength = Dice.random_strength
       m = Monster.new(monster_name, intelligence, strength)
       m.set_pos(row,col)
       @labyrinth.add_monster(row, col, m)
       @monsters << m
+      i = i+1
     end
     @labyrinth.spread_players(@players)
   end
@@ -116,7 +118,7 @@ def configure_labyrinth_debug
   num_monsters.times do
     row = j
     col = j
-    monster_name = "Monster #(i + 1)"
+    monster_name = "Monster #{i+1}"
     intelligence = j+1
     strength = j+2
     m = Monster.new(monster_name, intelligence, strength)
@@ -141,24 +143,24 @@ end
     current_player = @players[@current_player_index]
     rounds = 0
     winner = GameCharacter::PLAYER
-    lose = false
-    while (!lose && rounds < @@MAX_ROUNDS)
-      player_attack = current_player.attack
-      lose = monster.defend(player_attack)
+    player_attack = current_player.attack
+    lose = monster.defend(player_attack)
+    while !lose && rounds < @@MAX_ROUNDS
+      rounds = rounds + 1
+      winner = GameCharacter::MONSTER
+      monster_attack = monster.attack
+      lose = current_player.defend(monster_attack)
 
-      if !lose
-        monster_attack = monster.attack
-        lose = current_player.defend(monster_attack)
-        winner = GameCharacter::MONSTER if lose
+      unless lose
+        player_attack = current_player.attack
+        winner = GameCharacter::PLAYER
+        lose = monster.defend(player_attack)
       end
-
-      rounds +=1
     end
-
     log_rounds(rounds, @@MAX_ROUNDS)
     winner
-
   end
+
   def manage_reward(winner)
     current_player = @players[@current_player_index]
     if winner == GameCharacter::PLAYER

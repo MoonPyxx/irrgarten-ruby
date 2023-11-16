@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+require_relative 'Dice'
+require_relative 'Weapon'
+require_relative 'Shield'
 module Irrgarten
 class Player
   attr_reader :row, :col, :number
@@ -8,6 +11,7 @@ class Player
   @@HITS2LOSE = 3;
   def initialize(number, intelligence, strength)
     @number = number
+    @name = "Player # " + number.to_s
     @intelligence = intelligence
     @strength = strength
     @health = @@INITIAL_HEALTH
@@ -29,7 +33,7 @@ class Player
     @col = col
   end
   def dead
-    @health <=0
+    @health <= 0
   end
   def move (direction, valid_moves)
     size = valid_moves.size
@@ -55,7 +59,8 @@ class Player
   def receive_reward
     w_reward = Dice.weapons_reward
     s_reward = Dice.shields_reward
-
+    puts "w " + w_reward.to_s
+    puts "s " + s_reward.to_s
     w_reward.times do
       w_new = new_weapon
       receive_weapon(w_new)
@@ -68,30 +73,33 @@ class Player
     @health += extra_health
   end
   def to_string
-    "Player [Name: #{@name}, Number: #{@number}, Intelligence: #{@intelligence}, Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col}]"
+    weapons_str = @weapons.map { |w| w.to_s}.join(', ')
+    shields_str = @shields.map {|s| s.to_s}.join(', ')
+    "Player [Name: #{@name}, Intelligence: #{@intelligence}, Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col} ]\n" +
+      "Weapons: [#{weapons_str}] " + " SumWeapons: #{sum_weapons}\n" +
+      "Shields: [#{shields_str}] "  + " SumShields: #{sum_shields}"
   end
   private
   def receive_weapon(w)
     @weapons.each_with_index do |wi,i|
-      discard = wi.discard
-      if (discard)
+      if wi.discard
         @weapons.delete_at(i)
       end
     end
     size = @weapons.size
-    if (size<@@MAX_WEAPONS)
+    if size<@@MAX_WEAPONS
       @weapons << w
     end
   end
   def receive_shield(s)
     @shields.each_with_index do |si,i|
       discard = si.discard
-      if (discard)
+      if discard
         @shields.delete_at(i)
       end
     end
     size = @shields.size
-    if (size<@@MAX_SHIELDS)
+    if size<@@MAX_SHIELDS
       @shields << s
     end
   end
@@ -135,8 +143,9 @@ class Player
     if @consecutive_hits == @@HITS2LOSE || dead
       reset_hits
       lose = true
+    else
+      lose = false
     end
-
     lose
   end
   def reset_hits
@@ -148,6 +157,5 @@ class Player
   def inc_consecutive_hits
   @consecutive_hits += 1
   end
-
 end
 end

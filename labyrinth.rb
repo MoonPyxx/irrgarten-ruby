@@ -126,7 +126,7 @@ class Labyrinth
     !@monsters[row][col].nil? && !@players[row][col].nil?
   end
   def can_step_on(row,col)
-    pos_ok(row,col) && [@labyrinth[row][col] == @@EMPTY_CHAR || monster_pos(row,col) || exit_pos(row,col)]
+    pos_ok(row,col) && (@labyrinth[row][col] == @@EMPTY_CHAR || monster_pos(row,col) || exit_pos(row,col))
   end
   def update_old_pos(row,col)
     if pos_ok(row,col)
