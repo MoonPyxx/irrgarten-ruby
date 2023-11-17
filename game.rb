@@ -9,19 +9,21 @@ require_relative 'Orientation'
 module Irrgarten
 class Game
   @@MAX_ROUNDS = 10
+  # consultor de current_player para pruebas en main_automatico
+  attr_reader :current_player, :labyrinth
   def initialize(n_players,debug)
     @players = []
     @monsters = []
     @log = ""
     if (debug)
       @current_player_index =  0
-      n_players.times do [i]
-      intelligence = i+1
-      strength = i+1
+      n_players.times do |i|
+      intelligence = 5
+      strength = 5
       @players << Player.new((i.to_s + '0').chr, intelligence,strength)
       end
-      exit_row = 5
-      exit_col = 5
+      exit_row = 9
+      exit_col = 9
       @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row,exit_col)
       configure_labyrinth_debug
     else
@@ -36,19 +38,19 @@ class Game
       @labyrinth = Irrgarten::Labyrinth.new(10,10,exit_row, exit_col)
       configure_labyrinth
     end
+    @current_player = @players[@current_player_index]
     end
   def finished
     @labyrinth.have_a_winner
   end
   def next_step(preferred_direction)
-    current_player = @players[@current_player_index]
-    dead = current_player.dead
+    dead = @current_player.dead
     if !dead
       direction = actual_direction(preferred_direction)
       if direction != preferred_direction
         log_player_no_orders
       end
-      monster = @labyrinth.put_player(direction, current_player)
+      monster = @labyrinth.put_player(direction, @current_player)
       if monster.nil?
         log_no_monster
       else
@@ -104,8 +106,8 @@ class Game
     @labyrinth.spread_players(@players)
   end
 def configure_labyrinth_debug
-  num_blocks = 5
-  num_monsters = 5
+  num_blocks = 2
+  num_monsters = 2
   i = 0
   num_blocks.times do
     row = i+1
@@ -115,44 +117,49 @@ def configure_labyrinth_debug
     i = i+1
   end
   j = 0
-  num_monsters.times do
-    row = j
-    col = j
-    monster_name = "Monster #{i+1}"
-    intelligence = j+1
-    strength = j+2
-    m = Monster.new(monster_name, intelligence, strength)
-    m.set_pos(row,col)
-    @labyrinth.add_monster(row, col, m)
-    @monsters << m
-    j = j+1
-  end
+  # crear monstruos de manera automatica (debug)
+  # como voy a crear 2 para comprobar el combate no hace falta
+  #num_monsters.times do
+  # row = j
+  # col = j
+  #  monster_name = "Monster #{i+1}"
+  #  intelligence = j+1
+  #  strength = j+2
+    m1 = Monster.new("Monster 1", 10, 15)
+    m1.set_pos(5,5)
+    @labyrinth.add_monster(5, 5, m1)
+    @monsters << m1
+  m2 = Monster.new("Monster 2", 6, 6)
+  m2.set_pos(6,6)
+  @labyrinth.add_monster(6, 6, m2)
+  @monsters << m2
+  #  j = j+1
+  # end
+  @labyrinth.spread_players_debug(@players)
 end
   def next_player
     @current_player_index += 1
     @current_player_index = 0 if @current_player_index >= @players.size
   end
   def actual_direction(preferred_direction)
-    current_player = @players[@current_player_index]
-    current_row = current_player.row
-    current_col = current_player.col
+    current_row = @current_player.row
+    current_col = @current_player.col
     valid_moves = @labyrinth.valid_moves(current_row,current_col)
-    current_player.move(preferred_direction, valid_moves)
+    @current_player.move(preferred_direction, valid_moves)
   end
   def combat(monster)
-    current_player = @players[@current_player_index]
     rounds = 0
     winner = GameCharacter::PLAYER
-    player_attack = current_player.attack
+    player_attack = @current_player.attack
     lose = monster.defend(player_attack)
     while !lose && rounds < @@MAX_ROUNDS
       rounds = rounds + 1
       winner = GameCharacter::MONSTER
       monster_attack = monster.attack
-      lose = current_player.defend(monster_attack)
+      lose = @current_player.defend(monster_attack)
 
       unless lose
-        player_attack = current_player.attack
+        player_attack = @current_player.attack
         winner = GameCharacter::PLAYER
         lose = monster.defend(player_attack)
       end
@@ -162,19 +169,17 @@ end
   end
 
   def manage_reward(winner)
-    current_player = @players[@current_player_index]
     if winner == GameCharacter::PLAYER
-      current_player.receive_reward
+      @current_player.receive_reward
       log_player_won
     else
       log_monster_won
     end
   end
   def manage_resurrection
-    current_player = @players[@current_player_index]
     resurrect = Dice.resurrect_player
     if (resurrect)
-      current_player.resurrect
+      @current_player.resurrect
       log_resurrected
     else
       log_player_skip_turn

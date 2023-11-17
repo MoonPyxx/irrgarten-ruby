@@ -5,6 +5,8 @@ require_relative 'Shield'
 module Irrgarten
 class Player
   attr_reader :row, :col, :number
+  # modificador de health para pruebas en main_automatico
+  attr_writer :health
   @@MAX_WEAPONS = 2;
   @@MAX_SHIELDS = 3;
   @@INITIAL_HEALTH = 10;

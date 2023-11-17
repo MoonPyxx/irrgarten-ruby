@@ -27,14 +27,17 @@ class Labyrinth
     end
   end
   def spread_players_debug(players)
-    i = 0
-    players.each do |player|
-      row = i+1
-      col = i+2
-      pos = [row,col]
-      put_player_2d(-1, -1, pos[0], pos[1], player)
-      i = i+1
-    end
+    #i = 0
+    # asignar jugadores automaticamente, como lo voy a asignar manualmente no hace falta
+    # players.each do |player|
+    # row = i+1
+    # col = i+2
+    #  pos = [row,col]
+    player0  = players[0]
+    player1 = players[1]
+      put_player_2d(-1, -1, 5, 6, player0)
+      put_player_2d(-1, -1, 6, 5, player1)
+    # i = i+1
   end
   def have_a_winner
     !@players[@exit_row][@exit_col].nil?
@@ -160,6 +163,7 @@ class Labyrinth
     end
     [random_row, random_col]
   end
+  public #para poder mover a un jugador en main_automatico
   def put_player_2d(old_row, old_col, row, col, player)
     output = nil
     if can_step_on(row,col)
