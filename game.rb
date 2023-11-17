@@ -44,6 +44,7 @@ class Game
     @labyrinth.have_a_winner
   end
   def next_step(preferred_direction)
+    @log = ""
     dead = @current_player.dead
     if !dead
       direction = actual_direction(preferred_direction)
@@ -107,7 +108,7 @@ class Game
   end
 def configure_labyrinth_debug
   num_blocks = 2
-  num_monsters = 2
+  # num_monsters = 2
   i = 0
   num_blocks.times do
     row = i+1

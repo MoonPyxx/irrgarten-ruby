@@ -7,8 +7,8 @@ module Irrgarten
     def self.main
       game = Game.new(2,true)
       view = UI::TextUI.new
-      game.next_step(Directions::LEFT)
       # Combates
+      game.next_step(Directions::LEFT)
       view.show_game(game.get_game_state)
       game.next_step(Directions::RIGHT)
       view.show_game(game.get_game_state)
