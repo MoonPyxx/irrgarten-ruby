@@ -140,7 +140,7 @@ def configure_labyrinth_debug
 end
   def next_player
     @current_player_index += 1
-    @current_player_index = 0 if @current_player_index >= @players.size
+      @current_player_index = 0 if @current_player_index >= @players.size
   end
   def actual_direction(preferred_direction)
     current_row = @current_player.row

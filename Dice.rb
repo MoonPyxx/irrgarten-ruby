@@ -61,5 +61,14 @@ class Dice
       return @@generator.rand < probability
     end
   end
+  # Practica 4
+  def next_step(preference, valid_moves, intelligence)
+    if @@generator.rand < (intelligence/@@MAX_INTELLIGENCE)
+      preference
+
+    else
+      valid_moves[@@generator.rand(valid_moves.length)]
+    end
+  end
 end
 end
