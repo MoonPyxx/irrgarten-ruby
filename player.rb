@@ -2,6 +2,7 @@
 require_relative 'Dice'
 require_relative 'Weapon'
 require_relative 'Shield'
+require_relative 'labyrinth_character'
 module Irrgarten
 class Player < LabyrinthCharacter
   attr_reader :row, :col, :number
@@ -13,29 +14,22 @@ class Player < LabyrinthCharacter
   @@HITS2LOSE = 3;
   def initialize(number, intelligence, strength)
     @number = number
-    @name = "Player # " + number.to_s
-    @intelligence = intelligence
-    @strength = strength
-    @health = @@INITIAL_HEALTH
+    name = "Player # " + number.to_s
+    super(name,intelligence, strength, @@INITIAL_HEALTH)
     @row = 0
     @col = 0
     @consecutive_hits = 0
     @weapons = []
     @shields = []
   end
-
+  def self.copy(other)
+    new(other.name, other.intelligence, other.strength)
+  end
   def resurrect
     @weapons.clear
     @shields.clear
     @health = @@INITIAL_HEALTH
     @consecutive_hits = 0
-  end
-  def set_pos(row,col)
-    @row = row
-    @col = col
-  end
-  def dead
-    @health <= 0
   end
   def move (direction, valid_moves)
     size = valid_moves.size
@@ -152,9 +146,6 @@ class Player < LabyrinthCharacter
   end
   def reset_hits
   @consecutive_hits = 0
-  end
-  def got_wounded
-  @health -= 1
   end
   def inc_consecutive_hits
   @consecutive_hits += 1

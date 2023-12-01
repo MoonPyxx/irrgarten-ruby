@@ -117,15 +117,6 @@ def configure_labyrinth_debug
     @labyrinth.add_block(Orientation::VERTICAL,row,col,length)
     i = i+1
   end
-  j = 0
-  # crear monstruos de manera automatica (debug)
-  # como voy a crear 2 para comprobar el combate no hace falta
-  #num_monsters.times do
-  # row = j
-  # col = j
-  #  monster_name = "Monster #{i+1}"
-  #  intelligence = j+1
-  #  strength = j+2
     m1 = Monster.new("Monster 1", 10, 15)
     m1.set_pos(5,5)
     @labyrinth.add_monster(5, 5, m1)
@@ -134,13 +125,12 @@ def configure_labyrinth_debug
   m2.set_pos(6,6)
   @labyrinth.add_monster(6, 6, m2)
   @monsters << m2
-  #  j = j+1
-  # end
   @labyrinth.spread_players_debug(@players)
 end
   def next_player
     @current_player_index += 1
-      @current_player_index = 0 if @current_player_index >= @players.size
+    @current_player_index = 0 if @current_player_index >= @players.size
+    @current_player = @players[@current_player_index]
   end
   def actual_direction(preferred_direction)
     current_row = @current_player.row

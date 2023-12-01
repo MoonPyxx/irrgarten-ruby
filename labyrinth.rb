@@ -27,17 +27,10 @@ class Labyrinth
     end
   end
   def spread_players_debug(players)
-    #i = 0
-    # asignar jugadores automaticamente, como lo voy a asignar manualmente no hace falta
-    # players.each do |player|
-    # row = i+1
-    # col = i+2
-    #  pos = [row,col]
     player0  = players[0]
     player1 = players[1]
       put_player_2d(-1, -1, 5, 6, player0)
       put_player_2d(-1, -1, 6, 5, player1)
-    # i = i+1
   end
   def have_a_winner
     !@players[@exit_row][@exit_col].nil?
@@ -73,7 +66,7 @@ class Labyrinth
     old_row = player.row
     old_col = player.col
     new_pos = dir_2_pos(old_row, old_col, direction)
-    monster = put_player_2d(old_row, old_col, new_pos[0], new_pos[1], player)
+    put_player_2d(old_row, old_col, new_pos[0], new_pos[1], player)
   end
   def add_block(orientation, start_row, start_col, length)
     inc_row = 0
