@@ -1,5 +1,5 @@
 module Irrgarten
-class Weapon
+class Weapon < CombatElement
   # Constructor
   def initialize (power,uses)
     @power = power

@@ -1,5 +1,5 @@
 module Irrgarten
-class Shield
+class Shield < CombatElement
   # Constructor
   def initialize (protection,uses)
     @protection = protection

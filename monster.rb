@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Irrgarten
-class Monster
+class Monster < LabyrinthCharacter
   @@INITIAL_HEALTH = 5
 
   def initialize(name, intelligence, strength)

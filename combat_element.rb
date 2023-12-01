@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+module Irrgarten
+  class CombatElement
 
-class CombatElement
+
+  end
 end
+

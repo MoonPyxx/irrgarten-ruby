@@ -3,7 +3,7 @@ require_relative 'Dice'
 require_relative 'Weapon'
 require_relative 'Shield'
 module Irrgarten
-class Player
+class Player < LabyrinthCharacter
   attr_reader :row, :col, :number
   # modificador de health para pruebas en main_automatico
   attr_writer :health
