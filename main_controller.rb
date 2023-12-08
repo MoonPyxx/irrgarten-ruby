@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'UI/textUI'
 require_relative 'controller/controller'
-require_relative 'Game'
+require_relative 'game'
 module Irrgarten
   class TestP3
     def self.main

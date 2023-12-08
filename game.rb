@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 require_relative 'GameCharacter'
 require_relative 'Dice'
-require_relative 'Player'
-require_relative 'Labyrinth'
-require_relative 'Monster'
-require_relative 'Game_state'
+require_relative 'player'
+require_relative 'labyrinth'
+require_relative 'monster'
+require_relative 'game_state'
 require_relative 'Orientation'
+require_relative 'fuzzy_player'
 module Irrgarten
 class Game
   @@MAX_ROUNDS = 10
@@ -169,9 +170,17 @@ end
   end
   def manage_resurrection
     resurrect = Dice.resurrect_player
-    if (resurrect)
+    if resurrect
       @current_player.resurrect
-      log_resurrected
+      # resurrect_fuzzy=Dice.resurrect_player
+      #  if resurrect_fuzzy
+        new_fuzzy_player = FuzzyPlayer.new(@current_player)
+        @players[@current_player_index] = new_fuzzy_player
+        @current_player = new_fuzzy_player
+        log_resurrected_fuzzy
+      # else
+      #log_resurrected
+      #s end
     else
       log_player_skip_turn
     end
@@ -187,7 +196,9 @@ end
   def log_resurrected
     @log += "The player has resurrected.\n"
   end
-
+  def log_resurrected_fuzzy
+    @log += "The player has resurrected as a fuzzy player.\n"
+  end
   def log_player_skip_turn
     @log += "The player has skipped the turn due to being dead.\n"
   end

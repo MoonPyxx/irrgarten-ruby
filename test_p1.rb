@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # require_relative 'Weapon.rb'
 # require_relative 'Shield.rb'
-# require_relative 'Directions.rb'
+# require_relative 'directions.rb'
 # require_relative 'GameCharacter.rb'
 # require_relative 'Dice.rb'
 # class TestP1

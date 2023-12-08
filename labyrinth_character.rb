@@ -21,8 +21,8 @@ class LabyrinthCharacter
     @row = row
     @col = col
   end
-  def to_s
-    "LabyrinthCharacter [Name: #{@name}, Intelligence: #{@intelligence},
+  def to_string
+    "[Name: #{@name}, Intelligence: #{@intelligence},
  Strength: #{@strength}, Health: #{@health}, Row: #{@row}, Col: #{@col}]"
   end
   protected
