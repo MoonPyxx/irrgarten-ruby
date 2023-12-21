@@ -7,14 +7,14 @@ module Irrgarten
       game = Game.new(2,true)
       view = UI::TextUI.new
 
-=begin
+
       game.next_step(Directions::LEFT)
       view.show_game(game.get_game_state)
       game.next_step(Directions::RIGHT)
       view.show_game(game.get_game_state)
-=end
-      #Combates
+      # Combates
       # Probar resurrecion
+
       current_player = game.current_player
       current_player.health = 0
       game.next_step(Directions::UP)
@@ -34,6 +34,7 @@ module Irrgarten
         game.next_step(Directions::UP)
         view.show_game(game.get_game_state)
       end
+
     end
   end
   Irrgarten::TestP3.main

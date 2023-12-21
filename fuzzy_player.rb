@@ -4,6 +4,7 @@ module Irrgarten
 class FuzzyPlayer < Player
   def initialize(other)
     super(other.name, other.intelligence, other.strength)
+    @number = other.number
   end
   def move(direction, valid_moves)
     Dice.next_step(direction,valid_moves,@intelligence)

@@ -30,8 +30,8 @@ class Game
     else
       @current_player_index = Dice.who_starts(n_players)
       n_players.times do |i|
-        intelligence = 1
-        strength = 1
+        intelligence = Dice.random_intelligence
+        strength = Dice.random_strength
         @players << Player.new((i.to_s + '0').chr, intelligence, strength)
       end
       exit_row = Dice.random_pos(10)
